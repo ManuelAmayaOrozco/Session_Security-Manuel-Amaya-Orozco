@@ -4,10 +4,12 @@ public class UsuarioDTO {
 
     private String nombre;
     private String password;
+    private Boolean isAdmin;
 
-    public UsuarioDTO(String nombre, String password1, String password2) {
+    public UsuarioDTO(String nombre, String password, Boolean isAdmin) {
         this.nombre = nombre;
-        this.password = password1;
+        this.password = password;
+        this.isAdmin = isAdmin;
     }
 
     public UsuarioDTO(){}
@@ -28,4 +30,7 @@ public class UsuarioDTO {
         this.password = password;
     }
 
+    public Boolean getAdmin() { return isAdmin; }
+
+    public void setAdmin(Boolean admin) { isAdmin = admin; }
 }

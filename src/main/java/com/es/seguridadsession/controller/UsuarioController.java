@@ -27,7 +27,7 @@ public class UsuarioController {
     ) {
 
         // 1º Asegurarnos que userLogin no viene null
-        if(userLogin == null || userLogin.getNombre() == null || userLogin.getPassword() == null) {
+        if (userLogin == null || userLogin.getNombre() == null || userLogin.getPassword() == null) {
             // Lanzamos una excepcion
         }
 
@@ -47,7 +47,17 @@ public class UsuarioController {
     public ResponseEntity<UsuarioInsertDTO> insert(
             @RequestBody UsuarioInsertDTO nuevoUser
     ) {
-        return null;
+
+        // 1º Asegurarnos que nuevoUser no viene null
+        if(nuevoUser == null || nuevoUser.getNombre() == null || nuevoUser.getPassword1() == null) {
+            // Lanzamos una excepcion
+        }
+
+        // 2º Comprobar usuario y contraseña en el service y obtener token
+        UsuarioInsertDTO usuarioInsertDTO = usuarioService.insert(nuevoUser);
+
+        return new ResponseEntity<>(usuarioInsertDTO, HttpStatus.CREATED);
+
     }
 
 }

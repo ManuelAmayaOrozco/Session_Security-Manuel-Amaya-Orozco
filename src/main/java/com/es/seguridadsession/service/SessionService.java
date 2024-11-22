@@ -29,4 +29,23 @@ public class SessionService {
 
         return true;
     }
+
+    public Session getByToken(String token) {
+
+        // Comprobamos que el token existe y es válido
+        Session s = sessionRepository
+                .findByToken(token)
+                .orElseThrow();
+
+        // SI ESTOY EN ESTE PUNTO, es que ha encontrado el TOKEN
+        // Compruebo si la fecha es correcta
+        LocalDateTime ahora = LocalDateTime.now();
+        if(ahora.isAfter(s.getExpirationDate())) {
+            // LANZO UNA EXCEPCION
+        }
+
+        return s;
+
+    }
+
 }

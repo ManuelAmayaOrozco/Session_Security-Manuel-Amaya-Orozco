@@ -12,16 +12,19 @@ public class Usuario {
     @Column(unique = true)
     private String nombre;
     private String password;
+    private Boolean isAdmin;
 
-    public Usuario(Long id, String nombre, String password) {
+    public Usuario(Long id, String nombre, String password, Boolean isAdmin) {
         this.id = id;
         this.nombre = nombre;
         this.password = password;
+        this.isAdmin = isAdmin;
     }
 
-    public Usuario(String nombre, String password) {
+    public Usuario(String nombre, String password, Boolean isAdmin) {
         this.nombre = nombre;
         this.password = password;
+        this.isAdmin = isAdmin;
     }
 
     public Usuario() {
@@ -50,4 +53,8 @@ public class Usuario {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public Boolean getAdmin() { return isAdmin; }
+
+    public void setAdmin(Boolean admin) { isAdmin = admin; }
 }

@@ -118,7 +118,7 @@ public class ProductoController {
 
             //Obtenemos la sesion específica para conseguir el ID del usuario relacionado y la fecha de expiración
             Session session = sessionService.getByToken(token);
-            Long id = session.getId();
+            Long id = session.getUsuario().getId();
             LocalDateTime expirationDate = session.getExpirationDate();
 
             //Si la fecha ha expirado, no se permite entrar

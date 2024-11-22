@@ -58,7 +58,7 @@ public class ProductoService {
         ProductoDTO productoDTO = new ProductoDTO();
         productoDTO.setNombre(producto.getNombre());
         productoDTO.setStock(producto.getStock());
-        productoDTO.setPrecio(producto.isPrecio());
+        productoDTO.setPrecio(producto.getPrecio());
         return productoDTO;
 
     }
@@ -68,7 +68,7 @@ public class ProductoService {
         Producto producto = new Producto();
         producto.setNombre(productoDTO.getNombre());
         producto.setStock(productoDTO.getStock());
-        producto.setPrecio(productoDTO.isPrecio());
+        producto.setPrecio(productoDTO.getPrecio());
         return producto;
 
     }

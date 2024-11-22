@@ -6,6 +6,7 @@ import com.es.seguridadsession.model.Session;
 import com.es.seguridadsession.model.Usuario;
 import com.es.seguridadsession.repository.SessionRepository;
 import com.es.seguridadsession.repository.UsuarioRepository;
+import com.es.seguridadsession.utils.CipherUtils;
 import com.es.seguridadsession.utils.EncryptUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,24 +22,31 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
     @Autowired
     private SessionRepository sessionRepository;
+    @Autowired
+    private CipherUtils cipherUtils;
 
     public String login(UsuarioDTO userLogin) {
 
         // Comprobar si user y pass son correctos -> obtener de la BDD el usuario
         String nombreUser = userLogin.getNombre();
-        String passUser = EncryptUtil.encryptPassword(userLogin.getPassword());
+        String passUser = userLogin.getPassword();
 
         List<Usuario> users = usuarioRepository.findByNombre(nombreUser);
 
         Usuario u = users
                 .stream()
-                .filter(user -> user.getNombre().equals(nombreUser) && user.getPassword().equals(passUser))
+                .filter(user -> user.getNombre().equals(nombreUser) && cipherUtils.checkPassword(passUser, user.getPassword()))
                 .findFirst()
                 .orElseThrow(); // LANZAR EXCEPCION PROPIA
 
         // Si coincide -> Insertar una sesión
         // Genero un TOKEN
-        String token = UUID.randomUUID().toString(); // Esto genera un token aleatorio
+        String token = null; // Esto genera un token aleatorio
+        try {
+            token = cipherUtils.encrypt(nombreUser);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         System.out.println("Token generado: "+token);
         // Almaceno la Session en la base de datos
         Session s = new Session();
@@ -53,7 +61,27 @@ public class UsuarioService {
                 LocalDateTime.now().plusMinutes(2) //Las sesiones expiran en 1 minuto
         );
 
-        sessionRepository.save(s);
+        //Compruebo si la sesión está duplicada
+        List<Session> sessions = sessionRepository.findAll();
+        boolean found = false;
+
+        for (Session session: sessions) {
+
+            if (s.getUsuario().getId().equals(session.getUsuario().getId())) {
+
+                found = true;
+
+                break;
+
+            }
+
+        }
+
+        if (!found) {
+
+            sessionRepository.save(s);
+
+        }
 
         return token;
 
@@ -61,7 +89,7 @@ public class UsuarioService {
 
     public UsuarioInsertDTO insert(UsuarioInsertDTO nuevoUser) {
 
-        nuevoUser.setPassword1(EncryptUtil.encryptPassword(nuevoUser.getPassword1()));
+        nuevoUser.setPassword1(cipherUtils.hashPassword(nuevoUser.getPassword1()));
 
         Usuario usuario = mapToUser(nuevoUser);
 

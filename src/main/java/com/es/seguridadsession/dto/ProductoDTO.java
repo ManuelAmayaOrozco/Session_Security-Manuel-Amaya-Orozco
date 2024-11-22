@@ -4,11 +4,11 @@ public class ProductoDTO {
 
     private String nombre;
     private int stock;
-    private boolean precio;
+    private double precio;
 
     public ProductoDTO(){}
 
-    public ProductoDTO(String nombre, int stock, boolean precio) {
+    public ProductoDTO(String nombre, int stock, double precio) {
         this.nombre = nombre;
         this.stock = stock;
         this.precio = precio;
@@ -30,11 +30,11 @@ public class ProductoDTO {
         this.stock = stock;
     }
 
-    public boolean isPrecio() {
+    public double getPrecio() {
         return precio;
     }
 
-    public void setPrecio(boolean precio) {
+    public void setPrecio(double precio) {
         this.precio = precio;
     }
 }

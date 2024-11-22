@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -61,23 +62,11 @@ public class UsuarioService {
                 LocalDateTime.now().plusMinutes(2) //Las sesiones expiran en 1 minuto
         );
 
-        //Compruebo si la sesión está duplicada
-        List<Session> sessions = sessionRepository.findAll();
-        boolean found = false;
+        //Compruebo si la sesión existe
+        Optional<Session> session = sessionRepository.findByToken(token);
 
-        for (Session session: sessions) {
 
-            if (s.getUsuario().getId().equals(session.getUsuario().getId())) {
-
-                found = true;
-
-                break;
-
-            }
-
-        }
-
-        if (!found) {
+        if (session.isEmpty()) {
 
             sessionRepository.save(s);
 
